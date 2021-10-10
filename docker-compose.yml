@@ -1,0 +1,36 @@
+version: '2.2'
+services:
+
+  btc_chargers:
+    build: .
+    image: btc_chargers:latest
+    container_name: btc_chargers
+    restart: always
+    environment:
+      - TIME_ZONE='Asia/Kolkata'
+      - PSM_REFRESH_RATE_SECONDS=15
+      - PSM_AUTO_CONFIGURE=true
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=btc_chargers
+      - MYSQL_DATABASE_PREFIX=btc_
+    ports:
+      - 80:80
+    volumes:
+     - /sessions
+    depends_on:
+     - db
+
+  db:
+    image: mariadb
+    container_name: btc_chargers_mariadb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=btc_chargers
+    volumes:
+      - ./mariadb:/var/lib/mysql/btc_chargers
+
